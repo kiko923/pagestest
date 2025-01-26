@@ -5,43 +5,61 @@ export async function onRequest(context) {
     // 获取请求方法
     const method = request.method;
 
-    let key;
-    let urlToStore;
+    let shortKey;
+    let longUrl;
 
     if (method === "GET") {
-        // 从查询字符串中获取 URL
+        // 从查询字符串中获取 longUrl 和 shortKey
         const url = new URL(request.url);
-        urlToStore = url.searchParams.get('url');
-        
-        if (!urlToStore) {
-            return new Response("No URL provided", { status: 400 });
+        longUrl = url.searchParams.get('longUrl');
+        shortKey = url.searchParams.get('shortKey');
+
+        if (!longUrl) {
+            return new Response("No longUrl provided", { status: 400 });
         }
 
-        // 生成一个随机的六位字符串作为键
-        key = generateRandomKey();
-        
-        // 将 URL 存入 KV 空间
-        await kv.put(key, urlToStore);
-        
-        // 返回生成的键和存储的 URL
-        return new Response(`URL "${urlToStore}" stored with key: ${key}`);
+        // 判断是否传入了自定义 shortKey
+        if (shortKey) {
+            // 检查自定义 shortKey 是否已存在
+            const existingValue = await kv.get(shortKey);
+            if (existingValue) {
+                return new Response(`The custom shortKey "${shortKey}" already exists in KV.`, { status: 400 });
+            }
+            // 如果不存在，则使用 shortKey 存储 URL
+            await kv.put(shortKey, longUrl);
+            return new Response(`URL "${longUrl}" stored with custom shortKey: ${shortKey}`);
+        } else {
+            // 如果没有传入 shortKey，生成一个随机六位字符串作为键
+            shortKey = generateRandomKey();
+            await kv.put(shortKey, longUrl);
+            return new Response(`URL "${longUrl}" stored with generated shortKey: ${shortKey}`);
+        }
     } else if (method === "POST") {
         // 处理 POST 请求中的 JSON 数据
         const data = await request.json();
-        urlToStore = data.url;
-        
-        if (!urlToStore) {
-            return new Response("No URL provided", { status: 400 });
+        longUrl = data.longUrl;
+        shortKey = data.shortKey;
+
+        if (!longUrl) {
+            return new Response("No longUrl provided", { status: 400 });
         }
 
-        // 生成一个随机的六位字符串作为键
-        key = generateRandomKey();
-        
-        // 将 URL 存入 KV 空间
-        await kv.put(key, urlToStore);
-        
-        // 返回生成的键和存储的 URL
-        return new Response(`URL "${urlToStore}" stored with key: ${key}`);
+        // 判断是否传入了自定义 shortKey
+        if (shortKey) {
+            // 检查自定义 shortKey 是否已存在
+            const existingValue = await kv.get(shortKey);
+            if (existingValue) {
+                return new Response(`The custom shortKey "${shortKey}" already exists in KV.`, { status: 400 });
+            }
+            // 如果不存在，则使用 shortKey 存储 URL
+            await kv.put(shortKey, longUrl);
+            return new Response(`URL "${longUrl}" stored with custom shortKey: ${shortKey}`);
+        } else {
+            // 如果没有传入 shortKey，生成一个随机六位字符串作为键
+            shortKey = generateRandomKey();
+            await kv.put(shortKey, longUrl);
+            return new Response(`URL "${longUrl}" stored with generated shortKey: ${shortKey}`);
+        }
     }
 
     // 生成一个随机六位字符串（字母+数字）
