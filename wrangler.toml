@@ -1,14 +1,13 @@
 name = "myurls-workers"
 type = "javascript" # 或 "webpack" 取决于您的项目类型
 
-account_id = "your_account_id"
+account_id = "82cc2866c922d6613532c49a0ae38604"
 workers_dev = true
 compatibility_date = "2023-10-01"
 
 [env.production]
-route = "yourdomain.com/*"
-zone_id = "your_zone_id"
+route = "short.znnu.com/*"
 
 [[kv_namespaces]]
 binding = "LINKS"
-id = "your_kv_namespace_id"
+id = "LINKS"
