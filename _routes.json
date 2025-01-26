@@ -1,0 +1,8 @@
+{
+  "routes": [
+    {
+      "route": "/short",
+      "function": "functions/short.js"
+    }
+  ]
+}
