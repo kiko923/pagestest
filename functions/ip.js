@@ -6,28 +6,51 @@ export async function onRequest(context) {
     const method = request.method;
 
     let key;
+    let urlToStore;
+
     if (method === "GET") {
-        // 从查询字符串中获取键
+        // 从查询字符串中获取 URL
         const url = new URL(request.url);
-        key = url.searchParams.get('key');
+        urlToStore = url.searchParams.get('url');
+        
+        if (!urlToStore) {
+            return new Response("No URL provided", { status: 400 });
+        }
+
+        // 生成一个随机的六位字符串作为键
+        key = generateRandomKey();
+        
+        // 将 URL 存入 KV 空间
+        await kv.put(key, urlToStore);
+        
+        // 返回生成的键和存储的 URL
+        return new Response(`URL "${urlToStore}" stored with key: ${key}`);
     } else if (method === "POST") {
         // 处理 POST 请求中的 JSON 数据
         const data = await request.json();
-        key = data.key;
+        urlToStore = data.url;
+        
+        if (!urlToStore) {
+            return new Response("No URL provided", { status: 400 });
+        }
+
+        // 生成一个随机的六位字符串作为键
+        key = generateRandomKey();
+        
+        // 将 URL 存入 KV 空间
+        await kv.put(key, urlToStore);
+        
+        // 返回生成的键和存储的 URL
+        return new Response(`URL "${urlToStore}" stored with key: ${key}`);
     }
 
-    if (!key) {
-        return new Response("No key provided", { status: 400 });
-    }
-
-    // 检查该键是否存在于 KV 空间
-    const value = await kv.get(key);
-
-    if (value) {
-        // 如果键存在，返回存在的提示
-        return new Response(`Key "${key}" exists in KV with value: ${value}`);
-    } else {
-        // 如果键不存在，返回不存在的提示
-        return new Response(`Key "${key}" does not exist in KV`, { status: 404 });
+    // 生成一个随机六位字符串（字母+数字）
+    function generateRandomKey() {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let result = '';
+        for (let i = 0; i < 6; i++) {
+            result += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+        return result;
     }
 }
