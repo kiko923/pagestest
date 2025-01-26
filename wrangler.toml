@@ -1,0 +1,5 @@
+name = "short-url-api"
+main = "api/short.js"
+
+[[env.production.vars]]
+  CF_PAGES_BRANCH = "main"
