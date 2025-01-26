@@ -1,6 +1,6 @@
 export async function onRequest(context) {
     const { request, env } = context;
-    const kv = env.MY_KV_NAMESPACE;
+    const kv = env.LINKS;
 
     // 获取请求方法
     const method = request.method;
