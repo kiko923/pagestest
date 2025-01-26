@@ -92,37 +92,8 @@ export async function onRequest(context) {
     });
   }
 
-  // 处理重定向请求
-  async function handleRedirect(request) {
-    const url = new URL(request.url);
-    const suffix = url.pathname.split('/')[1];  // 获取短链接的后缀
-
-    // 从 KV 存储中取出原始URL
-    const targetUrl = await LINKS.get(suffix);
-
-    if (targetUrl) {
-      return Response.redirect(targetUrl, 301);  // 重定向到原始URL
-    } else {
-      return new Response('Short link not found', { status: 404 });
-    }
-  }
-
-  // 处理不同的请求路径
+  // 执行生成短链接函数
   addEventListener('fetch', event => {
-    const url = new URL(event.request.url);
-    
-    if (url.pathname === '/') {
-      // 根路径的请求
-      event.respondWith(fetch(new Request('https://kiko923.github.io/MyUrls/public/')));
-    } else if (url.pathname === '/short') {
-      // 创建短链接
-      event.respondWith(handleRequest(event.request));
-    } else if (url.pathname.startsWith('/')) {
-      // 跳转到原始链接（假设以 '/' 开头的路径是需要跳转的）
-      event.respondWith(handleRedirect(event.request));
-    } else {
-      // 其他路径返回 404
-      event.respondWith(new Response('Not Found', { status: 404 }));
-    }
+    event.respondWith(handleRequest(event.request));
   });
 }
