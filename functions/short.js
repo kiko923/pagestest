@@ -123,7 +123,6 @@ export async function onRequest(context) {
   }
 
   // 执行生成短链接函数
-  addEventListener('fetch', event => {
+
     event.respondWith(handleRequest(event.request));
-  });
 }
