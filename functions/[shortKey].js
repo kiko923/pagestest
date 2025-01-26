@@ -1,27 +1,19 @@
+// functions/[shortKey].js
 export async function onRequest(context) {
-    const { request, env } = context;
-    const kv = env.LINKS;  // KV 命名空间
-    const url = new URL(request.url);
+  const { request, env, params } = context;
+  const kv = env.LINKS;  // 假设你有一个名为 LINKS 的 KV 命名空间
 
-    // 从路径中获取要查找的 key
-    const pathParts = url.pathname.split('/').filter(Boolean);
+  // 从路径中获取 shortKey（例如 /123456）
+  const shortKey = params.shortKey;
 
-    // 如果路径为空，返回 404
-    if (pathParts.length === 0) {
-        return new Response("Not Found", { status: 404 });
-    }
+  // 从 KV 中获取对应的 long URL
+  const longUrl = await kv.get(shortKey);
 
-    // 使用路径中的第一个部分作为 key
-    const shortKey = pathParts[0];
-
-    // 从 KV 中查找该 key
-    const longUrl = await kv.get(shortKey);
-
-    if (longUrl) {
-        // 如果找到对应的 longUrl，返回 301 重定向
-        return Response.redirect(longUrl, 301);
-    } else {
-        // 如果找不到该 key，返回 404
-        return new Response("Not Found", { status: 404 });
-    }
+  if (longUrl) {
+    // 如果找到了 long URL，返回 301 重定向
+    return Response.redirect(longUrl, 301);
+  } else {
+    // 如果找不到，返回 404
+    return new Response("Not Found", { status: 404 });
+  }
 }
