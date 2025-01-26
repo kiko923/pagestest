@@ -35,10 +35,10 @@ export async function onRequest(context) {
             return new Response(`URL "${longUrl}" stored with generated shortKey: ${shortKey}`);
         }
     } else if (method === "POST") {
-        // 处理 POST 请求中的 JSON 数据
-        const data = await request.json();
-        longUrl = data.longUrl;
-        shortKey = data.shortKey;
+        // 处理 POST 请求中的表单数据
+        const formData = await request.formData();
+        longUrl = formData.get('longUrl');
+        shortKey = formData.get('shortKey');
 
         if (!longUrl) {
             return new Response("No longUrl provided", { status: 400 });
