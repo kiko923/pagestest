@@ -32,7 +32,13 @@ export async function onRequest(context) {
         error: 'Failed to get long URL. Please check the short URL if exists or expired.'
       }), {
         status: 400,
-        headers: { 'Content-Type': 'application/json' }
+        headers: {
+            "content-type": "application/json;charset=UTF-8",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Allow-Headers": "*",
+            "Access-Control-Allow-Methods": "*",
+            'Content-Type': 'application/json' }
       });
     }
 
@@ -45,7 +51,13 @@ export async function onRequest(context) {
         error: 'Failed to decode long URL. Please check if it is properly encoded.'
       }), {
         status: 400,
-        headers: { 'Content-Type': 'application/json' }
+        headers: {
+            "content-type": "application/json;charset=UTF-8",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Allow-Headers": "*",
+            "Access-Control-Allow-Methods": "*",
+          'Content-Type': 'application/json' }
       });
     }
 
@@ -63,7 +75,13 @@ export async function onRequest(context) {
         error: 'Short key already exists. Please use another one or leave it empty to generate automatically.'
       }), {
         status: 400,
-        headers: { 'Content-Type': 'application/json' }
+        headers: {
+            "content-type": "application/json;charset=UTF-8",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Allow-Headers": "*",
+            "Access-Control-Allow-Methods": "*",
+          'Content-Type': 'application/json' }
       });
     }
 
@@ -79,7 +97,13 @@ export async function onRequest(context) {
         error: 'Failed to store the short URL.'
       }), {
         status: 500,
-        headers: { 'Content-Type': 'application/json' }
+        headers: {
+            "content-type": "application/json;charset=UTF-8",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Allow-Headers": "*",
+            "Access-Control-Allow-Methods": "*",
+          'Content-Type': 'application/json' }
       });
     }
 
@@ -88,7 +112,13 @@ export async function onRequest(context) {
       shortUrl: shortLink
     }), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' }
+      headers: {
+            "content-type": "application/json;charset=UTF-8",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Allow-Headers": "*",
+            "Access-Control-Allow-Methods": "*",
+        'Content-Type': 'application/json' }
     });
   }
 
