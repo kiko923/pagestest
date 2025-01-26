@@ -1,13 +1,13 @@
-name = "myurls-workers"
-type = "javascript" # 或 "webpack" 取决于您的项目类型
+name = "myurls-workers"  # 项目名称
+type = "javascript"      # 如果使用 JavaScript Worker，可以设为 'javascript'
 
-account_id = "82cc2866c922d6613532c49a0ae38604"
-workers_dev = true
-compatibility_date = "2023-10-01"
+account_id = "82cc2866c922d6613532c49a0ae38604"  # 你的 Cloudflare 账户 ID
+workers_dev = true  # 如果启用开发环境，启用 workers_dev
+compatibility_date = "2023-10-01"  # Workers 兼容日期
 
 [env.production]
-route = "short.znnu.com/*"
+route = "/short"  # 只对 /short 路径生效，触发 Worker
 
 [[kv_namespaces]]
-binding = "LINKS"
-id = "LINKS"
+binding = "LINKS"  # 绑定到 KV 存储的变量名
+id = "LINKS"  # 你的 KV 存储 ID
