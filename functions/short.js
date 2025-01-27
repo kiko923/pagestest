@@ -92,7 +92,7 @@ export async function onRequest(context) {
                 });
             }
         } else {
-            shortKey = generateRandomKey();
+            shortKey = generateRandomKey(6);
         }
 
         await kv.put(shortKey, longUrl);
@@ -112,9 +112,13 @@ export async function onRequest(context) {
     /**
      * 生成一个随机六位字符串（字母+数字）
      */
-    function generateRandomKey() {
-        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        return Array.from({ length: 6 }, () => characters.charAt(Math.floor(Math.random() * characters.length))).join('');
+    function generateRandomKey(length) {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let result = '';
+      for (let i = 0; i < length; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return result;
     }
 
     /**
