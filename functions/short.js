@@ -2,6 +2,17 @@ export async function onRequest(context) {
     const { request, env } = context;
     const kv = env.LINKS;
 
+    // 检查 kv 是否有值
+    if (!kv) {
+      return new Response(JSON.stringify({
+        Code: 201,
+        Message: '请去Pages控制台-设置 绑定KV并将名称设定为‘LINKS’'
+      }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
     const method = request.method;
     let longUrl, shortKey;
 
