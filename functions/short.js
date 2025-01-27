@@ -14,6 +14,7 @@ export async function onRequest(context) {
             return respondWithError("No longUrl provided");
         }
 
+        longUrl = decodeBase64(longUrl);
         return await handleUrlStorage(kv, longUrl, shortKey);
     } else if (method === "POST") {
         const formData = await request.formData();
@@ -24,6 +25,7 @@ export async function onRequest(context) {
             return respondWithError("No longUrl provided");
         }
 
+        longUrl = decodeBase64(longUrl);
         return await handleUrlStorage(kv, longUrl, shortKey);
     }
 
@@ -51,5 +53,14 @@ export async function onRequest(context) {
     function generateRandomKey() {
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         return Array.from({ length: 6 }, () => characters.charAt(Math.floor(Math.random() * characters.length))).join('');
+    }
+
+    // Base64 解码函数
+    function decodeBase64(encodedString) {
+        try {
+            return atob(encodedString);
+        } catch (error) {
+            throw new Error("Invalid Base64 encoding");
+        }
     }
 }
