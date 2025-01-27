@@ -12,13 +12,25 @@ export async function onRequest(context) {
         shortKey = url.searchParams.get('shortKey');
 
         if (!longUrl) {
-            return jsonResponse(400, "failed", "No longUrl provided");
+            return new Response(JSON.stringify({
+                Code: 201,
+                Message: "No longUrl provided"
+            }), {
+                status: 400,
+                headers: { "Content-Type": "application/json" }
+            });
         }
 
         try {
             longUrl = decodeBase64(longUrl);
         } catch {
-            return jsonResponse(400, "failed", "Invalid Base64 encoding for longUrl");
+            return new Response(JSON.stringify({
+                Code: 201,
+                Message: "Invalid Base64 encoding for longUrl"
+            }), {
+                status: 400,
+                headers: { "Content-Type": "application/json" }
+            });
         }
 
         return await handleUrlStorage(kv, longUrl, shortKey);
@@ -31,20 +43,38 @@ export async function onRequest(context) {
         shortKey = formData.get('shortKey');
 
         if (!longUrl) {
-            return jsonResponse(400, "failed", "No longUrl provided");
+            return new Response(JSON.stringify({
+                Code: 201,
+                Message: "No longUrl provided"
+            }), {
+                status: 400,
+                headers: { "Content-Type": "application/json" }
+            });
         }
 
         try {
             longUrl = decodeBase64(longUrl);
         } catch {
-            return jsonResponse(400, "failed", "Invalid Base64 encoding for longUrl");
+            return new Response(JSON.stringify({
+                Code: 201,
+                Message: "Invalid Base64 encoding for longUrl"
+            }), {
+                status: 400,
+                headers: { "Content-Type": "application/json" }
+            });
         }
 
         return await handleUrlStorage(kv, longUrl, shortKey);
     }
 
     // 不支持的请求方法
-    return jsonResponse(405, "failed", "Method not allowed");
+    return new Response(JSON.stringify({
+        Code: 405,
+        Message: "Method not allowed"
+    }), {
+        status: 405,
+        headers: { "Content-Type": "application/json" }
+    });
 
     /**
      * 处理 URL 存储逻辑
@@ -53,7 +83,13 @@ export async function onRequest(context) {
         if (shortKey) {
             const existingValue = await kv.get(shortKey);
             if (existingValue) {
-                return jsonResponse(409, "failed", `The custom shortKey \"${shortKey}\" already exists.`);
+                return new Response(JSON.stringify({
+                    Code: 201,
+                    Message: `The custom shortKey \"${shortKey}\" already exists.`
+                }), {
+                    status: 409,
+                    headers: { "Content-Type": "application/json" }
+                });
             }
         } else {
             shortKey = generateRandomKey();
@@ -61,15 +97,14 @@ export async function onRequest(context) {
 
         await kv.put(shortKey, longUrl);
         const shortUrl = `https://${request.headers.get("host")}/${shortKey}`;
-        return jsonResponse(200, "success", "URL stored successfully", { shortUrl, longUrl, shortKey });
-    }
-
-    /**
-     * 返回 JSON 格式响应
-     */
-    function jsonResponse(statusCode, status, message, data = {}) {
-        return new Response(JSON.stringify({ status, message, data }), {
-            status: statusCode,
+        return new Response(JSON.stringify({
+            Code: 1,
+            Message: "URL stored successfully",
+            ShortUrl: shortUrl,
+            LongUrl: longUrl,
+            ShortKey: shortKey
+        }), {
+            status: 200,
             headers: { "Content-Type": "application/json" }
         });
     }
