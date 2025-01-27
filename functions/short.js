@@ -6,7 +6,7 @@ export async function onRequest(context) {
     if (!kv) {
       return new Response(JSON.stringify({
         Code: 201,
-        Message: '请去Pages控制台-设置 绑定KV并将名称设定为‘LINKS’'
+        Message: '请去Pages控制台-设置 将变量名称设定为“LINKS”并绑定KV命名空间然后重试部署！'
       }), {
         status: 200,
         headers: { 'Content-Type': 'application/json' }
