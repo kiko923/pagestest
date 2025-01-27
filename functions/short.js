@@ -16,7 +16,7 @@ export async function onRequest(context) {
                 Code: 201,
                 Message: "No longUrl provided"
             }), {
-                status: 400,
+                status: 200,
                 headers: { "Content-Type": "application/json" }
             });
         }
@@ -28,7 +28,7 @@ export async function onRequest(context) {
                 Code: 201,
                 Message: "Invalid Base64 encoding for longUrl"
             }), {
-                status: 400,
+                status: 200,
                 headers: { "Content-Type": "application/json" }
             });
         }
@@ -47,7 +47,7 @@ export async function onRequest(context) {
                 Code: 201,
                 Message: "No longUrl provided"
             }), {
-                status: 400,
+                status: 200,
                 headers: { "Content-Type": "application/json" }
             });
         }
@@ -59,7 +59,7 @@ export async function onRequest(context) {
                 Code: 201,
                 Message: "Invalid Base64 encoding for longUrl"
             }), {
-                status: 400,
+                status: 200,
                 headers: { "Content-Type": "application/json" }
             });
         }
@@ -87,7 +87,7 @@ export async function onRequest(context) {
                     Code: 201,
                     Message: `The custom shortKey \"${shortKey}\" already exists.`
                 }), {
-                    status: 409,
+                    status: 200,
                     headers: { "Content-Type": "application/json" }
                 });
             }
